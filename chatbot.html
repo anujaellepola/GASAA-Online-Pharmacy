@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./images/logorbg.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles/category.css">
+    <title>GASAA Pharmacy - Q&A</title>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;1,300&family=Roboto:ital,wght@0,100;0,300;0,400;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 70px 0 0 0;
+            background-color: #f0f0f0;
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chat-container {
+            max-width: 400px;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        #chat-box {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .user-input {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 16px;
+        }
+
+        button:hover{
+            background-color: rgb(170, 237, 115);
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .suggestions button {
+            background-color: #3498db;
+            color: #fff;
+            margin: 5px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .user-message-suggestions {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .user-message-suggestions button {
+            background-color: #a9130c;
+            color: #fff;
+            margin: 5px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .user-message-suggestions button:hover {
+            background-color: black;
+        }
+        header .navbar a:hover {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo"><i class="fas-fa-untensils"></i>GASAA Pharmacy</a>
+    
+            <h1>Questions and Answers</h1>
+                <nav class="navbar">
+                    <a class="active" href="index.php">Go to Home</a>
+                </nav>
+    </header>
+
+    <div class="user-message-suggestions">
+        <strong>Try these messages:</strong>
+        <button onclick="selectUserMessage('Medications')">Medications</button>
+        <button onclick="selectUserMessage('Prescription')">Prescription</button>
+        <button onclick="selectUserMessage('Order Status')">Order Status</button>
+        <button onclick="selectUserMessage('Delivery Information')">Delivery Information</button>
+        <button onclick="selectUserMessage('Opening Hours')">Opening Hours</button>
+        <button onclick="selectUserMessage('Contact')">Contact</button>
+        <button onclick="selectUserMessage('Payment Methods')">Payment Methods</button>
+        <button onclick="selectUserMessage('return policy')">return policy</button>
+        <button onclick="selectUserMessage('pharmacist consultation')">pharmacist consultation</button>
+        <button onclick="selectUserMessage('health advice')">health advice</button>
+        <button onclick="selectUserMessage('product recommendations')">product recommendations</button>
+        <button onclick="selectUserMessage('lost password')">lost password</button>
+        <button onclick="selectUserMessage('product availability')">product availability</button>
+        <button onclick="selectUserMessage('privacy policy')">privacy policy</button>
+    </div>
+
+    <div class="chat-container">
+        <div id="chat-box"></div>
+        <div class="user-input">
+            <input type="text" id="user-message" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div class="suggestions" id="suggestion-box"></div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userMessage = document.getElementById('user-message').value.trim();
+            if (userMessage === '') return;
+
+            // Append user message to the chat box
+            appendMessage('You', userMessage);
+
+            // Clear the input field
+            document.getElementById('user-message').value = '';
+
+            // Display bot response and suggestions
+            displayBotResponse(userMessage);
+
+            // Clear suggestions
+            clearSuggestions();
+        }
+
+        function selectUserMessage(message) {
+            // Set the selected message in the input field
+            document.getElementById('user-message').value = message;
+
+            // Send the selected message to the bot
+            sendMessage();
+        }
+
+        function displayBotResponse(userMessage) {
+            // Get bot response based on user input
+            const botResponse = getBotResponse(userMessage);
+
+            // Append bot response to the chat box
+            appendMessage('Bot', botResponse);
+
+            // Display user message suggestions
+            displayUserMessageSuggestions();
+        }
+
+        function getBotResponse(userMessage) {
+            const responses = {
+                'hi': 'Hello! How can I assist you today?',
+                'hello': 'Hi there! How can I help you?',
+                'who are you': 'I am a chatbot, always ready to help!',
+                'medications': 'We offer a variety of medications for different health conditions. Please specify the medication you are looking for in the website search bar to check availability.',
+                'prescription': 'If you have a prescription, you can upload it through our website, or visit our store for assistance.',
+                'order product': 'You can place your order by logging into your account on our website or contacting our customer support.',
+                'delivery information': 'Our standard delivery time is 2-3 business days. If you have specific delivery-related questions contact our customer support, feel free to ask!',
+                'opening hours': 'Our pharmacy is open Monday to Friday from 9 AM to 6 PM. We are closed on weekends and public holidays.',
+                'contact': 'You can reach our customer support at Gassa@gmail.com or call us at +94 0776315366.',
+                'payment methods': 'We accept various payment methods, including credit cards, debit cards, and Cash on delivery.',
+                'return policy': 'Our return policy allows returns within 7 days of purchase.',
+                'pharmacist consultation': 'Our pharmacists are available for consultation regarding your medications and health concerns. Feel free to ask for assistance.',
+                'health advice': 'While I can provide general health information, it is essential to consult with a healthcare professional for personalized advice.',
+                'product recommendations': 'If you need recommendations for specific health products, our team can guide you based on your requirements and preferences.',
+                'lost password': 'If you have lost your password, you can reset it by visiting the "Forgot Password" link on our login page.',
+                'product availability': 'For information on product availability, please check our website or contact our customer support.',
+                'privacy policy': 'Our privacy policy outlines how we collect, use, and protect your personal information. You can review it on our website.',
+               
+                // ... add more responses here
+            };
+
+            const lowerCaseUserMessage = userMessage.toLowerCase();
+            return responses[lowerCaseUserMessage] || "I'm sorry, I didn't understand that. Try Messages Given Top Of The Page";
+        }
+
+        function appendMessage(sender, message) {
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('div');
+            messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatBox.appendChild(messageElement);
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function displayUserMessageSuggestions() {
+            const suggestionBox = document.getElementById('suggestion-box');
+            suggestionBox.innerHTML = ''; // Clear previous suggestions
+
+            // Example user message suggestions
+            const userMessageSuggestions = ['Hi', 'Medications', 'Order Status', 'Contact', 'Delivery Information'];
+
+            userMessageSuggestions.forEach(suggestion => {
+                const suggestionButton = document.createElement('button');
+                suggestionButton.textContent = suggestion;
+                suggestionButton.addEventListener('click', function() {
+                    // Set the clicked suggestion in the input field
+                    document.getElementById('user-message').value = suggestion;
+                    // Send the selected suggestion to the bot
+                    sendMessage();
+                    // Clear suggestions after sending
+                    clearSuggestions();
+                });
+                suggestionBox.appendChild(suggestionButton);
+            });
+        }
+
+        function clearSuggestions() {
+            const suggestionBox = document.getElementById('suggestion-box');
+            suggestionBox.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
